@@ -1,0 +1,21 @@
+{
+	"version": 1,
+	"changelists": [
+		{
+			"guid": "00000000000000000000000000000000",
+			"description": "Default Uncontrolled Changelist",
+			"files": [
+				"C:/Projects/MiddleTest5/Content/Maps/MiddleTest5.umap",
+				"C:/Projects/MiddleTest5/Content/Action/IMC_Player.uasset",
+				"C:/Projects/MiddleTest5/Content/Action/IA_Player.uasset",
+				"C:/Projects/MiddleTest5/Content/Action/IA_Fire.uasset",
+				"C:/Projects/MiddleTest5/Content/BluePrint/BP_Player.uasset",
+				"C:/Projects/MiddleTest5/Content/BluePrint/BP_GameModeBase.uasset",
+				"C:/Projects/MiddleTest5/Content/BluePrint/BP_Bullet.uasset",
+				"C:/Projects/MiddleTest5/Content/BluePrint/BP_Enemy.uasset",
+				"C:/Projects/MiddleTest5/Content/BluePrint/BP_DestroyZone.uasset",
+				"C:/Projects/MiddleTest5/Content/BluePrint/BP_EnemyManager.uasset"
+			]
+		}
+	]
+}

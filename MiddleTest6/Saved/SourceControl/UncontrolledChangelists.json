@@ -1,0 +1,21 @@
+{
+	"version": 1,
+	"changelists": [
+		{
+			"guid": "00000000000000000000000000000000",
+			"description": "Default Uncontrolled Changelist",
+			"files": [
+				"C:/Projects/MiddleTest6/Content/BP_Player.uasset",
+				"C:/Projects/MiddleTest6/Content/Middle6.umap",
+				"C:/Projects/MiddleTest6/Content/BP_GameBaseMode.uasset",
+				"C:/Projects/MiddleTest6/Content/BP_Bullet.uasset",
+				"C:/Projects/MiddleTest6/Content/BP_Enemy.uasset",
+				"C:/Projects/MiddleTest6/Content/BP_Enemymanager.uasset",
+				"C:/Projects/MiddleTest6/Content/BP_DestroyZone.uasset",
+				"C:/Projects/MiddleTest6/Content/IMC_Player.uasset",
+				"C:/Projects/MiddleTest6/Content/IA_PlayerMove.uasset",
+				"C:/Projects/MiddleTest6/Content/IA_Fire.uasset"
+			]
+		}
+	]
+}

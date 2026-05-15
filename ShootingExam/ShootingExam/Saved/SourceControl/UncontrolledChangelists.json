@@ -1,0 +1,26 @@
+{
+	"version": 1,
+	"changelists": [
+		{
+			"guid": "00000000000000000000000000000000",
+			"description": "Default Uncontrolled Changelist",
+			"files": [
+				"C:/Projects/ShootingExam/ShootingExam/Content/Blueprints/BP_Bullet.uasset",
+				"C:/Projects/ShootingExam/ShootingExam/Content/Blueprints/BP_Player.uasset",
+				"C:/Projects/ShootingExam/ShootingExam/Content/Blueprints/BP_Enemy.uasset",
+				"C:/Projects/ShootingExam/ShootingExam/Content/Blueprints/BP_EnemyManager.uasset",
+				"C:/Users/Admin/Downloads/ShootingExam/ShootingExam/Content/Blueprints/BP_Player.uasset",
+				"C:/Unreal/ShootingExam/Content/Maps/ShootingMap.umap",
+				"C:/Unreal/ShootingExam/Content/Inputs/Actions/IA_PlayerMove.uasset",
+				"C:/Unreal/ShootingExam/Content/Blueprints/BP_ShootingGameMode.uasset",
+				"C:/Unreal/ShootingExam/Content/Blueprints/BP_Player.uasset",
+				"C:/Unreal/ShootingExam/Content/Blueprints/BP_Bullet.uasset",
+				"C:/Unreal/ShootingExam/Content/Blueprints/BP_DestroyZone.uasset",
+				"C:/Unreal/ShootingExam/Content/Blueprints/BP_Enemy.uasset",
+				"C:/Unreal/ShootingExam/Content/Blueprints/BP_EnemyManager.uasset",
+				"C:/Unreal/ShootingExam/Content/Inputs/IMC_Player.uasset",
+				"C:/Unreal/ShootingExam/Content/Inputs/Actions/IA_PlayerFire.uasset"
+			]
+		}
+	]
+}

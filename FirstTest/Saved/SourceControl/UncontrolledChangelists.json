@@ -1,0 +1,20 @@
+{
+	"version": 1,
+	"changelists": [
+		{
+			"guid": "00000000000000000000000000000000",
+			"description": "Default Uncontrolled Changelist",
+			"files": [
+				"C:/Projects/FirstTest/Content/FirstTest.umap",
+				"C:/Projects/FirstTest/Content/Action/IMC_Player.uasset",
+				"C:/Projects/FirstTest/Content/Action/IA_Player.uasset",
+				"C:/Projects/FirstTest/Content/Action/IA_Fire.uasset",
+				"C:/Projects/FirstTest/Content/BluePrint/BP_Player.uasset",
+				"C:/Projects/FirstTest/Content/BluePrint/BP_Bullet.uasset",
+				"C:/Projects/FirstTest/Content/BluePrint/BP_GameBasemode.uasset",
+				"C:/Projects/FirstTest/Content/BluePrint/BP_GameModeBase.uasset",
+				"C:/Projects/FirstTest/Content/BluePrint/BP_Bullet2.uasset"
+			]
+		}
+	]
+}
