@@ -4,6 +4,7 @@
 #include "TPSPlayer.h"
 
 #include "Bullet.h"
+#include "Enemy.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
@@ -12,8 +13,8 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "TPS_MTVS5th/TPS_MTVS5th.h"
 
 
 // Sets default values
@@ -57,7 +58,7 @@ ATPSPlayer::ATPSPlayer()
 void ATPSPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-	PRINT_LOG(TEXT("3333333333333"));
+	
 	// 키 매핑을 하고싶다.
 	
 	PlayerCtrl = Cast<ATPSPlayerController>(GetController());
@@ -74,21 +75,21 @@ void ATPSPlayer::BeginPlay()
 		PlayerCtrl->PlayerCameraManager->ViewPitchMin = -45.f;
 		PlayerCtrl->PlayerCameraManager->ViewPitchMax = 45.f;
 	}
+	
 	OnMyChooseGun(FInputActionValue());
-
 }
 
-	
 // Called every frame
 void ATPSPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	//FOV가 zoomTarget을 향해 보간 처리되디록 하고싶다.
+	// FOV가 ZoomTarget을 향해 보간처리되도록 하고싶다.
 	if (CameraComp && CameraComp->IsValidLowLevel())
 	{
 		CameraComp->FieldOfView = FMath::Lerp(CameraComp->FieldOfView, ZoomTarget, DeltaTime * 10.f);
 	}
+	
 }
 
 // Called to bind functionality to input
@@ -111,10 +112,10 @@ void ATPSPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 		input->BindAction(IA_TPS1Key, ETriggerEvent::Started, this, &ATPSPlayer::OnMyChooseGun);
 
 		input->BindAction(IA_TPS2Key, ETriggerEvent::Started, this, &ATPSPlayer::OnMyChooseSniper);
-
-		input->BindAction(IA_TPSZoom, ETriggerEvent::Started, this, &ATPSPlayer::OnMyChooseZoomIn);
 		
-		input->BindAction(IA_TPSZoom, ETriggerEvent::Completed, this, &ATPSPlayer::OnMyChooseZoomOut);
+		input->BindAction(IA_TPSZoom, ETriggerEvent::Started, this, &ATPSPlayer::OnMyZoomIn);
+		input->BindAction(IA_TPSZoom, ETriggerEvent::Completed, this, &ATPSPlayer::OnMyZoomOut);
+
 	}
 }
 
@@ -156,20 +157,11 @@ void ATPSPlayer::OnMyChooseGun(const struct FInputActionValue& value)
 {
 	WeaponType = EWeaponType::GUN;
 	// GunComp만 보이게하고싶다.
-	
-	if (GunComp)
-	{
-		GunComp->SetVisibility(true);
-	}
+	GunComp->SetVisibility(true);
 	// SniperComp는 안보이게하고싶다.
-	if (SniperComp) SniperComp->SetVisibility(false);
-	if (PlayerCtrl)
-	{
-		PlayerCtrl->SetWeaponImage(WeaponType, EZoomType::ZOOM_OUT);
-		ZoomTarget = 90.f;
-	}
-	
-	
+	SniperComp->SetVisibility(false);
+	PlayerCtrl->SetWeaponImage(WeaponType, EZoomType::ZOOM_OUT);
+	ZoomTarget = 90.f;
 }
 
 void ATPSPlayer::OnMyChooseSniper(const struct FInputActionValue& value)
@@ -179,23 +171,26 @@ void ATPSPlayer::OnMyChooseSniper(const struct FInputActionValue& value)
 	SniperComp->SetVisibility(true);
 	// GunComp는 안보이게하고싶다.
 	GunComp->SetVisibility(false);
-	PlayerCtrl->SetWeaponImage(WeaponType, EZoomType::ZOOM_OUT);
+	PlayerCtrl->SetWeaponImage(WeaponType,  EZoomType::ZOOM_OUT);
+}
+
+void ATPSPlayer::OnMyZoomIn(const struct FInputActionValue& value)
+{
+	// 만약 건이면 취소
+	if (WeaponType == EWeaponType::GUN)
+		return;
 	
+	ZoomTarget = 30.f;
+	PlayerCtrl->SetWeaponImage(WeaponType,  EZoomType::ZOOM_IN);
 }
 
-void ATPSPlayer::OnMyChooseZoomIn(const struct FInputActionValue& value)
+void ATPSPlayer::OnMyZoomOut(const struct FInputActionValue& value)
 {
-	CameraComp->FieldOfView = 30.f;
-
-	PlayerCtrl->SetWeaponImage(WeaponType, EZoomType::ZOOM_IN);
-		
-}
-
-void ATPSPlayer::OnMyChooseZoomOut(const struct FInputActionValue& value)
-{
-	CameraComp->FieldOfView = 90.f;
-
-	PlayerCtrl->SetWeaponImage(WeaponType, EZoomType::ZOOM_OUT);
+	if (WeaponType == EWeaponType::GUN)
+		return;
+	
+	ZoomTarget = 90.f;
+	PlayerCtrl->SetWeaponImage(WeaponType,  EZoomType::ZOOM_OUT);
 }
 
 void ATPSPlayer::MakeBullet()
@@ -236,6 +231,18 @@ void ATPSPlayer::SharpShoot()
 			
 			GetWorld()->SpawnActor<AActor>(BulletImpactFactory, OutHit.ImpactPoint, rot);
 		}
+		
+		// 만약 충돌한 액터가 Enemy라면 Enemy에게 대미지를 전달하고싶다.
+		auto* enemy = Cast<AEnemy>(OutHit.GetActor());
+		if (enemy && enemy->IsValidLowLevel())
+		{
+			UGameplayStatics::ApplyDamage(
+				enemy,
+				1,
+				GetController(),
+				this,
+				UDamageType::StaticClass()
+				);
+		}
 	}
 }
-

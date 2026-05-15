@@ -5,32 +5,21 @@
 
 #include "WeaponUI.h"
 #include "Blueprint/UserWidget.h"
-#include "TPS_MTVS5th/TPS_MTVS5th.h"
-
 
 void ATPSPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	WeaponUI = CreateWidget<UWeaponUI>(this, WeaponUIFactory, "WeaponUI");
-	
-	if (!IsValid(WeaponUI))
-	{
-		UE_LOG(LogTemp, Error, TEXT("ATPSPlayerController: (BeginPlay) Failed Weapon Ui CreateWidget."));
-	}
-	
-	if (IsValid(WeaponUI)) 
+	// WeaponUIFactory를 이용해서 UWeaponUI 생성해서 WeaponUI에 담고 Viewport에 붙이세요.
+
+	WeaponUI = CastChecked<UWeaponUI>(CreateWidget(GetWorld(), WeaponUIFactory));
+	if (WeaponUI)
 	{
 		WeaponUI->AddToViewport();
 	}
-
 }
 
 void ATPSPlayerController::SetWeaponImage(EWeaponType type, EZoomType zoom)
 {
-
-	if (IsValid(WeaponUI)) 
-	{
-		WeaponUI->ShowImage(type, zoom);
-	}
+	WeaponUI->ShowImage(type, zoom);
 }

@@ -12,7 +12,6 @@ class TPS_MTVS5TH_API ATPSPlayer : public ACharacter
 {
 	GENERATED_BODY()
 
-	
 public:
 	// Sets default values for this character's properties
 	ATPSPlayer();
@@ -58,7 +57,7 @@ public:
 	TObjectPtr<class UInputAction> IA_TPS1Key;	
 
 	UPROPERTY(EditAnywhere, Category = MyVar)
-	TObjectPtr<class UInputAction> IA_TPS2Key;	
+	TObjectPtr<class UInputAction> IA_TPS2Key;
 	
 	UPROPERTY(EditAnywhere, Category = MyVar)
 	TObjectPtr<class UInputAction> IA_TPSZoom;
@@ -74,9 +73,8 @@ public:
 	void OnMyFire(const struct FInputActionValue& value);
 	void OnMyChooseGun(const struct FInputActionValue& value);
 	void OnMyChooseSniper(const struct FInputActionValue& value);
-	void OnMyChooseZoomIn(const struct FInputActionValue& value);
-	void OnMyChooseZoomOut(const struct FInputActionValue& value);
-	
+	void OnMyZoomIn(const struct FInputActionValue& value);
+	void OnMyZoomOut(const struct FInputActionValue& value);
 	
 	void MakeBullet();
 	void SharpShoot();
@@ -87,10 +85,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = MyVar)
 	TObjectPtr<UClass> BulletImpactFactory;
 	
-	
 	UPROPERTY()
-	TObjectPtr<class ATPSPlayerController> PlayerCtrl;;
+	TObjectPtr<class ATPSPlayerController> PlayerCtrl;
 	
 	float ZoomTarget = 90.f;
+	
 	
 };
