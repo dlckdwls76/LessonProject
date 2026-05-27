@@ -5,7 +5,9 @@
 
 #include "Enemy.h"
 #include "EnemyAnim.h"
+#include "EnemyHPUI.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/WidgetComponent.h"
 #include "TPS_MTVS5th/TPS_MTVS5th.h"
 
 
@@ -27,7 +29,11 @@ void UFSMComponent::BeginPlay()
 
 	Me = Cast<AEnemy>(GetOwner());
 	
+	
+	HpUI = Cast<UEnemyHPUI>(Me->HPComp->GetWidget());
+	
 	CurHP = MaxHP;
+	HpUI ->UpdateHPBar(1.f, 1.f);
 	
 }
 
@@ -146,6 +152,12 @@ void UFSMComponent::StateDamage()
 
 void UFSMComponent::StateDie()
 {
+	
+	if (false == bDie)
+	{
+		return;
+	}
+
 	// 시간이 흐르다가
 	CurTime += GetWorld()->GetDeltaSeconds();
 	
@@ -168,11 +180,16 @@ void UFSMComponent::OnMyTakeDamage(int32 damage)
 	}
 	
 	CurHP -= damage;
+	
+	if (HpUI)
+	{
+		HpUI->UpdateHPBar(static_cast<float>(CurHP),static_cast<float>(MaxHP));
+	}
 	CurTime = 0;
 	if (CurHP <= 0.f)
 	{
 		State = EEnemyState::DIE;
-		// 캡슐의 충돌체를 끄고싶다.
+		// 캡슐의 충돌체를 끄고싶다.	
 		Me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		
 		auto* anim = Cast<UEnemyAnim>(Me->GetMesh()->GetAnimInstance());

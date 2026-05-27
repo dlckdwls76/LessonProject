@@ -4,6 +4,7 @@
 #include "Enemy.h"
 
 #include "FSMComponent.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
@@ -11,6 +12,10 @@ AEnemy::AEnemy()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
+	HPComp = CreateDefaultSubobject<UWidgetComponent>(FName("HPComp")); 
+	HPComp -> SetupAttachment(RootComponent);
+	
 	
 	FSMComp = CreateDefaultSubobject<UFSMComponent>("FSMComp");
 	
@@ -30,6 +35,14 @@ void AEnemy::BeginPlay()
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	//HPcom를 빌보딩하고싶다.
+	//카메라의 방향을 구해서 그 방향으로 HPComp를 회전하고 싶다.
+	FVector CamLoc = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation();
+	
+	FVector dif = CamLoc - HPComp->GetComponentLocation();
+	HPComp->SetWorldRotation(dif.ToOrientationQuat());	
+	
+	
 }
 
 // Called to bind functionality to input

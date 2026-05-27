@@ -48,5 +48,7 @@ public:
 	
 	void PlayDamgeMontage(int32 idx);
 	void PlayDieMontage();
+	
+	TObjectPtr<class UFSMComponent> GetFSMComp();
 
 };
