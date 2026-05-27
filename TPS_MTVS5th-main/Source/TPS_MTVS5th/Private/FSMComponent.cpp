@@ -4,8 +4,10 @@
 #include "FSMComponent.h"
 
 #include "Enemy.h"
-#include "TPS_MTVS5th/TPS_MTVS5th.h"
+#include "EnemyAnim.h"
 #include "Components/CapsuleComponent.h"
+#include "TPS_MTVS5th/TPS_MTVS5th.h"
+
 
 // Sets default values for this component's properties
 UFSMComponent::UFSMComponent()
@@ -103,6 +105,7 @@ void UFSMComponent::StateAttack()
 		if (CurTime > AttackDelayTime)
 		{
 			// 현재시간을 0으로 초기화하고
+			
 			CurTime = 0;
 			// sub공격상태로 전이하고싶다.
 			bAttack = true;
@@ -111,35 +114,50 @@ void UFSMComponent::StateAttack()
 	
 }
 
+
+void UFSMComponent::OnMyAttackEnd()
+{
+	// 현재시간을 0으로 초기화하
+	CurTime = 0;
+	// sub공격상태로 전이하고싶다.
+	bAttack = true;
+	
+}
+
+void UFSMComponent::SetState(EEnemyState newState)
+{
+	CurTime = 0;
+	State = newState;
+	
+}
+
 void UFSMComponent::StateDamage()
 {
-	// 시간이 흐르다가 
+	// // 시간이 흐르다가 
+	// CurTime += GetWorld()->GetDeltaSeconds();
+	// // 현재시간이 리액션시간(ReactDelayTime)을 초과하면
+	// if (CurTime > ReactDelayTime)
+	// {
+	// 	CurTime = 0;
+	// 	// 이동상태로 전이하고싶다.
+	// 	State = EEnemyState::MOVE;
+	// }
+}
+
+void UFSMComponent::StateDie()
+{
+	// 시간이 흐르다가
 	CurTime += GetWorld()->GetDeltaSeconds();
-	// 현재시간이 리액션시간(ReactDelayTime)을 초과하면
-	if (CurTime > ReactDelayTime)
-	{
-		CurTime = 0;
-		// 이동상태로 전이하고싶다.
-		State = EEnemyState::MOVE;
-	}
-	}
-
-	void UFSMComponent::StateDie()
-	{
-		//시간이 흐르다가	
-		//2초동안 바닥으로 내려가고 싶다.
-		//2초가 지나면 스스로 파괴되고싶다.
-		CurTime += GetWorld()->GetDeltaSeconds();
 	
-		Me->SetActorLocation(Me->GetActorLocation() + FVector((0, 0, -200)* GetWorld()->GetDeltaSeconds()));
+	// 바닥으로 내려가고싶다.
+	Me->SetActorLocation(Me->GetActorLocation() + FVector(0, 0, -200) * GetWorld()->GetDeltaSeconds());
 	
-		if (CurTime > 2.f)
+	// 2초가 지나면 파괴되고싶다.
+	if (CurTime > 2.f)
 	{
-		Me -> Destroy();	
+		Me->Destroy();
 	}
-	}
-
-
+}
 
 void UFSMComponent::OnMyTakeDamage(int32 damage)
 {
@@ -154,12 +172,22 @@ void UFSMComponent::OnMyTakeDamage(int32 damage)
 	if (CurHP <= 0.f)
 	{
 		State = EEnemyState::DIE;
-		//캡슐의 충돌체를 끄고싶다.
+		// 캡슐의 충돌체를 끄고싶다.
 		Me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		
+		auto* anim = Cast<UEnemyAnim>(Me->GetMesh()->GetAnimInstance());
+		anim->PlayDieMontage();
 	}
 	else
 	{
 		State = EEnemyState::DAMAGE;
+		//나의 오너가 가지고있는 mesh를 알고싶고,
+		//그 mesh에게 animinstance를 가져와서
+		//animinstance를 enemyanim으로 캐스팅하고싶다.
+		auto* anim = Cast<UEnemyAnim>(Me->GetMesh()->GetAnimInstance());
+		
+		int32 randValue = FMath::RandRange(0,1);
+		anim -> PlayDamgeMontage(randValue);
 	}
 }
+

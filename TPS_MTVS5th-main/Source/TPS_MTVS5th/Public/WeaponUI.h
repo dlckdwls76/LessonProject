@@ -15,13 +15,12 @@ class TPS_MTVS5TH_API UWeaponUI : public UUserWidget
 {
 	GENERATED_BODY()
 	
-	public:
+public:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<class UImage> ImageCrosshair;
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<class UImage> ImageScope;
-
-
+	
 	void ShowImage(EWeaponType type, EZoomType zoom);
 };

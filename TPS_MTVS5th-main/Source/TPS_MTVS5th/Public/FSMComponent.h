@@ -4,17 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "../TPS_MTVS5th.h"
 #include "FSMComponent.generated.h"
 
-UENUM(BlueprintType)
-enum class EEnemyState : uint8
-{
-	IDLE UMETA(DisplayName = "대기"),
-	MOVE,
-	ATTACK,
-	DAMAGE,
-	DIE
-};
+
+
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class TPS_MTVS5TH_API UFSMComponent : public UActorComponent
@@ -32,8 +26,8 @@ protected:
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-							   FActorComponentTickFunction* ThisTickFunction) override;
-
+	                           FActorComponentTickFunction* ThisTickFunction) override;
+	
 	EEnemyState State;
 	void StateIdle();
 	void StateMove();
@@ -47,6 +41,8 @@ public:
 	UPROPERTY()
 	TObjectPtr<class AEnemy> Me;
 	
+	
+	
 	void OnMyTakeDamage(int32 damage);
 	
 	bool bAttack;
@@ -58,4 +54,7 @@ public:
 	int32 CurHP;
 	int32 MaxHP = 2;
 	
+	void OnMyAttackEnd();
+	
+	void SetState(EEnemyState newState);
 };

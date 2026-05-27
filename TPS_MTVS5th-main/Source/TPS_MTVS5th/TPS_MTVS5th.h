@@ -12,18 +12,27 @@ DECLARE_LOG_CATEGORY_EXTERN(MYLOG, Log, All);
 #define PRINT_LOG(fmt, ...) \
 	UE_LOG(MYLOG, Warning, TEXT("%s %s"), *CALL_INFO, *FString::Printf(fmt, ##__VA_ARGS__))
 
-//열거형
-
+// 열거형
 UENUM(BlueprintType)
-enum class EWeaponType : uint8
+enum class EWeaponType : uint8 
 {
 	GUN,
-	SNIPER
+	SNIPER,
 };
 
 UENUM(BlueprintType)
-enum class EZoomType : uint8
+enum class EZoomType : uint8 
 {
 	ZOOM_IN,
-	ZOOM_OUT
+	ZOOM_OUT,
+};
+
+UENUM(BlueprintType)
+enum class EEnemyState : uint8
+{
+	IDLE UMETA(DisplayName = "대기"),
+	MOVE,
+	ATTACK,
+	DAMAGE,
+	DIE
 };

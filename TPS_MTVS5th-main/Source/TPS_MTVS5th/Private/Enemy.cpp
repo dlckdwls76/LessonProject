@@ -4,7 +4,7 @@
 #include "Enemy.h"
 
 #include "FSMComponent.h"
-
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AEnemy::AEnemy()
@@ -12,12 +12,11 @@ AEnemy::AEnemy()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	FSMComp = CreateDefaultSubobject<UFSMComponent>(FName("FSMComp"));
+	FSMComp = CreateDefaultSubobject<UFSMComponent>("FSMComp");
 	
-
+	GetCharacterMovement()->bOrientRotationToMovement= true;
+	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 }
-
-
 
 // Called when the game starts or when spawned
 void AEnemy::BeginPlay()
@@ -42,7 +41,7 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 float AEnemy::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator,
 	AActor* DamageCauser)
 {
-	FSMComp -> OnMyTakeDamage(DamageAmount);
+	FSMComp->OnMyTakeDamage(DamageAmount);
 	
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
