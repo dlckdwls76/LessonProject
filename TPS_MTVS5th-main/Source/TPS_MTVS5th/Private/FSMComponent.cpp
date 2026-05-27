@@ -31,10 +31,11 @@ void UFSMComponent::BeginPlay()
 	
 	
 	HpUI = Cast<UEnemyHPUI>(Me->HPComp->GetWidget());
-	
-	CurHP = MaxHP;
-	HpUI ->UpdateHPBar(1.f, 1.f);
-	
+	if (HpUI)
+	{
+		CurHP = MaxHP;
+		HpUI ->UpdateHPBar(1.f, 1.f);
+	}
 }
 
 
