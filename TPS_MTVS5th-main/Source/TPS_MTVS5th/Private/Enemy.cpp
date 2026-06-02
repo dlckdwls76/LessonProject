@@ -4,6 +4,7 @@
 #include "Enemy.h"
 
 #include "FSMComponent.h"
+#include "NavigationInvokerComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -16,8 +17,9 @@ AEnemy::AEnemy()
 	HPComp = CreateDefaultSubobject<UWidgetComponent>(FName("HPComp")); 
 	HPComp -> SetupAttachment(RootComponent);
 	
-	
 	FSMComp = CreateDefaultSubobject<UFSMComponent>("FSMComp");
+	
+	NavInvokerComp = CreateDefaultSubobject<UNavigationInvokerComponent>(FName("NavInvokerComp"));
 	
 	GetCharacterMovement()->bOrientRotationToMovement= true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
