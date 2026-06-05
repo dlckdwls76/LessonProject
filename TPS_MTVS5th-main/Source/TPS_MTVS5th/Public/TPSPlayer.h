@@ -3,9 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "GameFramework/Character.h"
 #include "TPS_MTVS5th/TPS_MTVS5th.h"
 #include "TPSPlayer.generated.h"
+
+//DECLARE_DELEGATE()
+//DECLARE_DYNAMIC_DELEGATE()
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE()
+//DECLARE_EVENT
+
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FInputComponentDelegate, class 
+	UEnhancedInputComponent*);
+
 
 UCLASS()
 class TPS_MTVS5TH_API ATPSPlayer : public ACharacter
@@ -15,8 +26,10 @@ class TPS_MTVS5TH_API ATPSPlayer : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ATPSPlayer();
+	void PossessedBy(AController* NewController);
 
 protected:
+	void OnMyChooseGun(const FInputActionValue& InputActionValue);
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -26,6 +39,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
 	
 	// 카메라 컴포넌트를 붙이고싶다.
 	UPROPERTY(EditAnywhere, Category = MyVar)
@@ -75,24 +89,6 @@ public:
 	UPROPERTY(EditAnywhere, Category = MyVar)
 	TObjectPtr<class UInputMappingContext> IMC_TPSPlayer;
 	
-	EWeaponType WeaponType;
-
-	void OnMyMove(const struct FInputActionValue& value);
-	void OnMyLook(const struct FInputActionValue& value);
-	void OnMyJump(const struct FInputActionValue& value);
-	void OnMyFire(const struct FInputActionValue& value);
-	void OnMyChooseGun(const struct FInputActionValue& value);
-	void OnMyChooseSniper(const struct FInputActionValue& value);
-	void OnMyZoomIn(const struct FInputActionValue& value);
-	void OnMyZoomOut(const struct FInputActionValue& value);
-	void OnMyJog(const struct FInputActionValue& value);
-	void OnMyWalk(const struct FInputActionValue& value);
-	void OnMyCrouch(const struct FInputActionValue& value);
-	void OnMyDiveRoll(const struct FInputActionValue& value);
-	
-	void MakeBullet();
-	void SharpShoot();
-	
 	UPROPERTY(EditAnywhere, Category = MyVar)
 	TSubclassOf<class ABullet> BulletFactory;
 	
@@ -102,7 +98,6 @@ public:
 	UPROPERTY()
 	TObjectPtr<class ATPSPlayerController> PlayerCtrl;
 	
-	float ZoomTarget = 90.f;
 	
 	// 총쏠때 소리를 내고싶다.
 	UPROPERTY(EditAnywhere, Category = MyVar)
@@ -111,5 +106,14 @@ public:
 	UPROPERTY(EditAnywhere, Category = MyVar)
 	TSubclassOf<UCameraShakeBase> FireCameraShake;
 	
+	UPROPERTY()
+	TObjectPtr<class UPlayerBaseComponent> MoveComp;
+
+	UPROPERTY()
+	TObjectPtr<class UPlayerBaseComponent> FireComp;
 	
+	
+	FInputComponentDelegate InputComponentDelegate;	
+	
+
 };

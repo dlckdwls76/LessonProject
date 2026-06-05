@@ -20,5 +20,9 @@ void ATPSPlayerController::OnPossess(APawn* InPawn)
 
 void ATPSPlayerController::SetWeaponImage(EWeaponType type, EZoomType zoom)
 {
+	
+	if (IsValid(WeaponUI))
+	{
 	WeaponUI->ShowImage(type, zoom);
+	}
 }
