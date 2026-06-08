@@ -21,5 +21,12 @@ public:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<class UUserWidget> GameOver;
 	
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<class UImage> ImageSniper;
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<class UImage> ImageGun;
+
 	void SetGameOverActive(bool bActive);
+	
+	void SetChooseGun(bool bGun);
 };
