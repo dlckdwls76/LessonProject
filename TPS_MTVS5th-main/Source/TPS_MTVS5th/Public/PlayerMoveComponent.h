@@ -19,14 +19,16 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
+	
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-							   FActorComponentTickFunction* ThisTickFunction) override;
+	                           FActorComponentTickFunction* ThisTickFunction) override;
 	
-	virtual void SetupPlayerInputComp(class UEnhancedInputComponent* input) override;
-
+	virtual void SetPlayerInputComp(class UEnhancedInputComponent* input) override;
+	
+	
+	// 이동
 	void OnMyMove(const struct FInputActionValue& value);
 	void OnMyLook(const struct FInputActionValue& value);
 	void OnMyJump(const struct FInputActionValue& value);

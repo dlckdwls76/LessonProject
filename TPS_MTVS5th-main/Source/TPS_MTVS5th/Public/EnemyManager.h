@@ -30,8 +30,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = Spawn)
 	TSubclassOf<class AEnemy> EnemyFactory;
 	
-	FTimerHandle TimerHandle; 
+	FTimerHandle TimerHandle;
 	
 	int32 LatestIndex;
-	
 };

@@ -3,17 +3,18 @@
 
 #include "FSMComponent.h"
 
+#include "TPS_MTVS5th/TPS_MTVS5th.h"
 #include "Enemy.h"
 #include "EnemyAnim.h"
 #include "EnemyHPUI.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
-#include "Runtime/AIModule/Classes/AIController.h"
-#include "TPS_MTVS5th/TPS_MTVS5th.h"
 #include "AIController.h"
 #include "NavigationSystem.h"
 #include "NavigationSystemTypes.h"
+#include "TPSPlayer.h"
 #include "Navigation/PathFollowingComponent.h"
+
 
 // Sets default values for this component's properties
 UFSMComponent::UFSMComponent()
@@ -30,17 +31,19 @@ UFSMComponent::UFSMComponent()
 void UFSMComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	Me = Cast<AEnemy>(GetOwner());
 	
 	AI = Cast<AAIController>(Me->GetController());
 	
 	HpUI = Cast<UEnemyHPUI>(Me->HPComp->GetWidget());
+	
+	CurHP = MaxHP;
 	if (HpUI)
 	{
-		CurHP = MaxHP;
-		HpUI ->UpdateHPBar(1.f, 1.f);
+		HpUI->UpdateHPBar(1.f, 1.f);
 	}
+	
 }
 
 
@@ -82,8 +85,8 @@ void UFSMComponent::StateMove()
 	FVector dir = destination - Me->GetActorLocation();
 	//Me->AddMovementInput(dir, 1);
 	
-	//순찰, 추적을 구현하고싶다.
-	//만약 Target이 길 위에 있다면 추적을 하고싶고,
+	// 순찰, 추적을 구현하고 싶다.
+	// 만약 Target이 길 위에 있다면 추적을 하고싶고
 	auto* ns = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 	FPathFindingQuery query;
 	FAIMoveRequest req;
@@ -92,29 +95,31 @@ void UFSMComponent::StateMove()
 	
 	AI->BuildPathfindingQuery(req, query);
 	
-	auto result = ns -> FindPathSync(query);
+	auto result = ns->FindPathSync(query);
+	// 만약 Target이 길 위에 있다면
 	if (result.IsSuccessful())
 	{
-	    auto res= AI->MoveToLocation(destination);//target이 길 위에 있다.
+		AI->MoveToLocation(destination);
 	}
-	
-	//그렇지않다면 순찰을 하고싶다. 
+	// 그렇지않다면 순찰을 하고싶다. 
 	else
 	{
-	
-		//순찰을 하기 위해서 길 위에 랜덤한 위치를 정해서 그곳으로 이동하고싶다.
-		EPathFollowingRequestResult::Type res = AI->MoveToLocation(RandomTargetPoint);
-		//만약 이미도착했거나 실패했다면
-		if (res!= EPathFollowingRequestResult::Type::RequestSuccessful)
+		//	순찰을 하기위해 길위의 랜덤한 위치를 정해서 그곳으로 이동하고싶다.
+		auto res = AI->MoveToLocation(RandomTargetPoint);
+		// 만약 이미도착했거나 실패했다면
+		if (res != EPathFollowingRequestResult::Type::RequestSuccessful)
 		{
-			//다시 목적지를 만들어주고싶다.
+			// 다시 목적지를 만들어주고싶다.
 			SetRandomTargetPoint(RandomTargetPoint);
 		}
 	}
 	
 	
 	
-	AI -> MoveToLocation(destination, 150.f);
+
+	
+	
+	
 	
 	float distance = dir.Size();
 	// 조건 : Target과의 거리가 2미터 이내라면
@@ -139,36 +144,15 @@ void UFSMComponent::StateAttack()
 			return;	
 		}
 
-		// 공격!
-		PRINT_LOG(TEXT("Attack!!!!!"));
-		// sub공격대기 상태로 전이하고싶다.
-		bAttack = false;
 	}
-	else
-	{
-		// 시간이 흐르다가
-		CurTime += GetWorld()->GetDeltaSeconds();
-		// 만약 현재시간이 sub공격대기시간을 초과하면
-		if (CurTime > AttackDelayTime)
-		{
-			// 현재시간을 0으로 초기화하고
-			
-			CurTime = 0;
-			// sub공격상태로 전이하고싶다.
-			bAttack = true;
-		}
-	}
-	
 }
-
 
 void UFSMComponent::OnMyAttackEnd()
 {
-	// 현재시간을 0으로 초기화하
+	// 현재시간을 0으로 초기화하고
 	CurTime = 0;
 	// sub공격상태로 전이하고싶다.
 	bAttack = true;
-	
 }
 
 void UFSMComponent::SetState(EEnemyState newState)
@@ -177,13 +161,12 @@ void UFSMComponent::SetState(EEnemyState newState)
 	State = newState;
 	
 	SetRandomTargetPoint(RandomTargetPoint);
-	
 }
 
 bool UFSMComponent::SetRandomTargetPoint(FVector& outTargetPoint)
 {
-	//갈 수 있는 길위의 랜덤한 위치를 기억하고싶다.
-
+	// 갈 수 있는 길위의 랜덤한 위치를 기억하고싶다.
+	
 	auto* ns = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 	FVector origin = Me->GetActorLocation();
 	float radius = 500.f;
@@ -193,8 +176,10 @@ bool UFSMComponent::SetRandomTargetPoint(FVector& outTargetPoint)
 		outTargetPoint = resultLoc.Location;
 		return true;
 	}
+	
 	return false;
 }
+
 
 void UFSMComponent::StateDamage()
 {
@@ -211,12 +196,11 @@ void UFSMComponent::StateDamage()
 
 void UFSMComponent::StateDie()
 {
-	
-	if (false == bDie)
+	if (!bDie)
 	{
 		return;
 	}
-
+	
 	// 시간이 흐르다가
 	CurTime += GetWorld()->GetDeltaSeconds();
 	
@@ -241,31 +225,31 @@ void UFSMComponent::OnMyTakeDamage(int32 damage)
 	AI->StopMovement();
 	
 	CurHP -= damage;
-	
 	if (HpUI)
 	{
-		HpUI->UpdateHPBar(static_cast<float>(CurHP),static_cast<float>(MaxHP));
+		HpUI->UpdateHPBar(static_cast<float>(CurHP), static_cast<float>(MaxHP));
 	}
 	CurTime = 0;
 	if (CurHP <= 0.f)
 	{
 		State = EEnemyState::DIE;
-		// 캡슐의 충돌체를 끄고싶다.	
+		// 캡슐의 충돌체를 끄고싶다.
 		Me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		
+
 		auto* anim = Cast<UEnemyAnim>(Me->GetMesh()->GetAnimInstance());
 		anim->PlayDieMontage();
 	}
 	else
 	{
 		State = EEnemyState::DAMAGE;
-		//나의 오너가 가지고있는 mesh를 알고싶고,
-		//그 mesh에게 animinstance를 가져와서
-		//animinstance를 enemyanim으로 캐스팅하고싶다.
+		// 나의 오너가 가지고있는 Mesh를 알고싶고,
+		// 그 Mesh에게 AnimInstace를 가져와서
+		// AnimInstance를 EnemyAnim으로 캐스팅 하고싶다.
 		auto* anim = Cast<UEnemyAnim>(Me->GetMesh()->GetAnimInstance());
 		
-		int32 randValue = FMath::RandRange(0,1);
-		anim -> PlayDamgeMontage(randValue);
+		int32 randValue = FMath::RandRange(0, 1);
+		anim->PlayDamageMontage(randValue);
 	}
 }
+
 

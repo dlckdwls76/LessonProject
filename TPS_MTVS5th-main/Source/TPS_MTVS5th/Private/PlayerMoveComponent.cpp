@@ -4,7 +4,6 @@
 #include "PlayerMoveComponent.h"
 
 #include "EnhancedInputComponent.h"
-#include "InputActionValue.h"
 #include "TPSPlayer.h"
 #include "TPSPlayerAnim.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -26,8 +25,8 @@ void UPlayerMoveComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-
 	// ...
+	
 }
 
 
@@ -36,24 +35,27 @@ void UPlayerMoveComponent::TickComponent(float DeltaTime, ELevelTick TickType,
                                          FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	// ...
 }
 
-void UPlayerMoveComponent::SetupPlayerInputComp(class UEnhancedInputComponent* input)
+void UPlayerMoveComponent::SetPlayerInputComp(class UEnhancedInputComponent* input)
 {
-	Super::SetupPlayerInputComp(input);
+	Super::SetPlayerInputComp(input);
 	
 	input->BindAction(Me->IA_TPSMove, ETriggerEvent::Triggered, this, &UPlayerMoveComponent::OnMyMove);
 		
 	input->BindAction(Me->IA_TPSLook, ETriggerEvent::Triggered, this, &UPlayerMoveComponent::OnMyLook);
 		
 	input->BindAction(Me->IA_TPSJump, ETriggerEvent::Started, this, &UPlayerMoveComponent::OnMyJump);
-		
+
 	input->BindAction(Me->IA_TPSJog, ETriggerEvent::Started, this, &UPlayerMoveComponent::OnMyJog);
 	input->BindAction(Me->IA_TPSJog, ETriggerEvent::Completed, this, &UPlayerMoveComponent::OnMyWalk);
 		
 	input->BindAction(Me->IA_TPSCrouch, ETriggerEvent::Started, this, &UPlayerMoveComponent::OnMyCrouch);
 		
 	input->BindAction(Me->IA_TPSDiveRoll, ETriggerEvent::Started, this, &UPlayerMoveComponent::OnMyDiveRoll);
+
 }
 
 
@@ -68,7 +70,7 @@ void UPlayerMoveComponent::OnMyMove(const FInputActionValue& value)
 void UPlayerMoveComponent::OnMyLook(const FInputActionValue& value)
 {
 	FVector2D v = value.Get<FVector2D>();
-
+	
 	Me->AddControllerYawInput(v.X);
 	Me->AddControllerPitchInput(v.Y);
 }
@@ -106,4 +108,5 @@ void UPlayerMoveComponent::OnMyDiveRoll(const struct FInputActionValue& value)
 	{
 		anim->PlayDiveRollMontage();
 	}
+
 }

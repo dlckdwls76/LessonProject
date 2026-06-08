@@ -12,7 +12,6 @@
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "TPS_MTVS5th/TPS_MTVS5th.h"
 
 
 // Sets default values for this component's properties
@@ -22,7 +21,6 @@ UPlayerFireComponent::UPlayerFireComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	
 	// ...
 }
 
@@ -32,29 +30,28 @@ void UPlayerFireComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	OnMyChooseGun(FInputActionValue());
+	OnMyChooseSniper(FInputActionValue());
+
 	
 }
 
 
 // Called every frame
-void UPlayerFireComponent::TickComponent(float DeltaTime, ELevelTick TickType,
-                                         FActorComponentTickFunction* ThisTickFunction)
+void UPlayerFireComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 
 	// FOV가 ZoomTarget을 향해 보간처리되도록 하고싶다.
 	if (Me->CameraComp && Me->CameraComp->IsValidLowLevel())
 	{
 		Me->CameraComp->FieldOfView = FMath::Lerp(Me->CameraComp->FieldOfView, ZoomTarget, DeltaTime * 10.f);
 	}
-	
+
 }
 
-void UPlayerFireComponent::SetupPlayerInputComp(class UEnhancedInputComponent* input)
+void UPlayerFireComponent::SetPlayerInputComp(class UEnhancedInputComponent* input)
 {
-	Super::SetupPlayerInputComp(input);
+	Super::SetPlayerInputComp(input);
 	
 	input->BindAction(Me->IA_TPSFire, ETriggerEvent::Started, this, &UPlayerFireComponent::OnMyFire);
 
@@ -63,8 +60,8 @@ void UPlayerFireComponent::SetupPlayerInputComp(class UEnhancedInputComponent* i
 	input->BindAction(Me->IA_TPS2Key, ETriggerEvent::Started, this, &UPlayerFireComponent::OnMyChooseSniper);
 		
 	input->BindAction(Me->IA_TPSZoom, ETriggerEvent::Started, this, &UPlayerFireComponent::OnMyZoomIn);
-	
 	input->BindAction(Me->IA_TPSZoom, ETriggerEvent::Completed, this, &UPlayerFireComponent::OnMyZoomOut);
+
 }
 
 
@@ -135,6 +132,8 @@ void UPlayerFireComponent::OnMyZoomOut(const struct FInputActionValue& value)
 	Me->PlayerCtrl->SetWeaponImage(WeaponType,  EZoomType::ZOOM_OUT);
 }
 
+
+
 void UPlayerFireComponent::MakeBullet()
 {
 	FTransform t = Me->GunComp->GetSocketTransform(TEXT("FirePoint"));
@@ -188,3 +187,5 @@ void UPlayerFireComponent::SharpShoot()
 		}
 	}
 }
+
+

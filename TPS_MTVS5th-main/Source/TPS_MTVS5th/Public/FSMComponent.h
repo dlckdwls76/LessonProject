@@ -9,7 +9,6 @@
 
 
 
-
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class TPS_MTVS5TH_API UFSMComponent : public UActorComponent
 {
@@ -27,7 +26,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
-	
+
 	EEnemyState State;
 	void StateIdle();
 	void StateMove();
@@ -41,8 +40,6 @@ public:
 	UPROPERTY()
 	TObjectPtr<class AEnemy> Me;
 	
-	
-	
 	void OnMyTakeDamage(int32 damage);
 	
 	bool bDie;
@@ -54,18 +51,22 @@ public:
 	
 	int32 CurHP;
 	int32 MaxHP = 2;
-	
+
 	void OnMyAttackEnd();
 	
 	void SetState(EEnemyState newState);
 	
 	UPROPERTY()
 	TObjectPtr<class UEnemyHPUI> HpUI;
-	//이동처리를 위해 AIController를 캐싱하고싶다.
+	
+	
+	// 이동처리를 위해 AIController를 캐싱하고싶다.
 	UPROPERTY()
 	TObjectPtr<class AAIController> AI;
 	
 	FVector RandomTargetPoint;
 	
 	bool SetRandomTargetPoint(FVector& outTargetPoint);
+
+
 };

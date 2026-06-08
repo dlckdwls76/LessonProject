@@ -21,7 +21,7 @@ void UTPSPlayerAnim::NativeUpdateAnimation(float DeltaSeconds)
 		return;
 	
 	// 살아가면서 Speed와 Direction을 채우고싶다.
-	FVector vel = Player->GetVelocity();	
+	FVector vel = Player->GetVelocity();
 	
 	Speed = FVector::DotProduct(Player->GetActorForwardVector(), vel);
 	Direction = FVector::DotProduct(Player->GetActorRightVector(), vel);

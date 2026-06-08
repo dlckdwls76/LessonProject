@@ -19,38 +19,33 @@ AEnemyManager::AEnemyManager()
 void AEnemyManager::BeginPlay()
 {
 	Super::BeginPlay();
-		
-	SpawnPoints.Empty(5);
 	
-	//레벨에서 tag이 SpawnPoint인 StaticMeshActor를 모두 찾고싶다.
-	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), AStaticMeshActor::StaticClass(), FName("SpawnPoint"),SpawnPoints);
+	SpawnPoints.Empty(5);
+	// 레벨에서 tag이 SpawnPoint인 StaticMeshActor를 모두 찾고싶다.
+	// 찾은 녀석들을 SpawnPoints에 넣고싶다.
+	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), AStaticMeshActor::StaticClass(), FName("SpawnPoint"), SpawnPoints);
+	
 	
 	GetWorldTimerManager().SetTimer(TimerHandle, [&]()
 	{
 		MakeEnemy();
 	}, 2, true);
-	//찾은 녀석들을 spawnPoints에 넣고싶다.
-	
-	
-
-	
 }
 
 void AEnemyManager::MakeEnemy()
 {
-	//spawnPoints 중에 랜덤으로 하나 정해서 t를 확장하고싶다.
-	int32 index = FMath::RandRange(0, SpawnPoints.Num() - 1);
+	// SpawnPoints 중에 랜덤으로 하나 정해서 t를 확정하고싶다.
+	int32 index = index = FMath::RandRange(0, SpawnPoints.Num() - 1);
 	if (index == LatestIndex)
 	{
-	
-		index = (index + 1)% SpawnPoints.Num();
-		
+		index = (index + 1) % SpawnPoints.Num();
 	}
 	LatestIndex = index;
+	FTransform t = SpawnPoints[index]->GetActorTransform();
 	
-	FTransform t = SpawnPoints[index] -> GetActorTransform();
-	GetWorld()->SpawnActor<AEnemy>(EnemyFactory, t);	
+	GetWorld()->SpawnActor<AEnemy>(EnemyFactory, t);
 }
+
 // Called every frame
 void AEnemyManager::Tick(float DeltaTime)
 {

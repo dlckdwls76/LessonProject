@@ -3,6 +3,7 @@
 
 #include "TPSPlayerController.h"
 
+#include "MainUI.h"
 #include "WeaponUI.h"
 #include "Blueprint/UserWidget.h"
 
@@ -16,13 +17,19 @@ void ATPSPlayerController::OnPossess(APawn* InPawn)
 	{
 		WeaponUI->AddToViewport();
 	}
+
+	MainUI = CastChecked<UMainUI>(CreateWidget(GetWorld(), MainUIFactory));
+	if (MainUI)
+	{
+		MainUI->AddToViewport();
+	}
+
 }
 
 void ATPSPlayerController::SetWeaponImage(EWeaponType type, EZoomType zoom)
 {
-	
-	if (IsValid(WeaponUI))
+	if (WeaponUI && WeaponUI->IsValidLowLevel())
 	{
-	WeaponUI->ShowImage(type, zoom);
+		WeaponUI->ShowImage(type, zoom);
 	}
 }

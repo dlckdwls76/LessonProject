@@ -13,18 +13,18 @@ UPlayerBaseComponent::UPlayerBaseComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
-	bWantsInitializeComponent = true;	
+	
+	bWantsInitializeComponent = true;
 }
 
 void UPlayerBaseComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
-	
+
 	Me = Cast<ATPSPlayer>(GetOwner());
 	
-	Me -> InputComponentDelegate.AddUObject(this,&UPlayerBaseComponent::SetupPlayerInputComp);
+	Me->InputComponentDelegate.AddUObject(this, &UPlayerBaseComponent::SetPlayerInputComp);
+
 }
 
 
@@ -32,12 +32,10 @@ void UPlayerBaseComponent::InitializeComponent()
 void UPlayerBaseComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
 
 	
 
 }
-
 
 
 // Called every frame
@@ -49,8 +47,7 @@ void UPlayerBaseComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	// ...
 }
 
-void UPlayerBaseComponent::SetupPlayerInputComp(class UEnhancedInputComponent* input)
-{
-	
-}
 
+void UPlayerBaseComponent::SetPlayerInputComp(class UEnhancedInputComponent* input)
+{
+}

@@ -3,19 +3,33 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InputActionValue.h"
 #include "GameFramework/Character.h"
 #include "TPS_MTVS5th/TPS_MTVS5th.h"
 #include "TPSPlayer.generated.h"
+//
+// DECLARE_DELEGATE_OneParam(FTestDelegate, int32 value);
+// DECLARE_DYNAMIC_DELEGATE_OneParam(FDTestDelegate, int32, value);
+// DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDMDelegate, int32, value);
 
-//DECLARE_DELEGATE()
-//DECLARE_DYNAMIC_DELEGATE()
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE()
-//DECLARE_EVENT
+DECLARE_MULTICAST_DELEGATE_OneParam(FInputComponentDelegate, class UEnhancedInputComponent*);
 
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FInputComponentDelegate, class 
-	UEnhancedInputComponent*);
+// FTestDelegate td;
+//
+//
+// void Test()
+// {
+// 	
+// 	td.BindLambda([](){});
+// 	if (td.IsBound())
+// 	{
+// 		td.Execute(0);
+// 	}
+// }
+//
+
+
+
 
 
 UCLASS()
@@ -26,21 +40,20 @@ class TPS_MTVS5TH_API ATPSPlayer : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ATPSPlayer();
-	void PossessedBy(AController* NewController);
 
 protected:
-	void OnMyChooseGun(const FInputActionValue& InputActionValue);
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
+	virtual void PossessedBy(AController* NewController) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
-	
+
 	// 카메라 컴포넌트를 붙이고싶다.
 	UPROPERTY(EditAnywhere, Category = MyVar)
 	TObjectPtr<class USpringArmComponent> CameraBoomComp;
@@ -89,15 +102,14 @@ public:
 	UPROPERTY(EditAnywhere, Category = MyVar)
 	TObjectPtr<class UInputMappingContext> IMC_TPSPlayer;
 	
+	UPROPERTY()
+	TObjectPtr<class ATPSPlayerController> PlayerCtrl;
+	
 	UPROPERTY(EditAnywhere, Category = MyVar)
 	TSubclassOf<class ABullet> BulletFactory;
 	
 	UPROPERTY(EditAnywhere, Category = MyVar)
 	TObjectPtr<UClass> BulletImpactFactory;
-	
-	UPROPERTY()
-	TObjectPtr<class ATPSPlayerController> PlayerCtrl;
-	
 	
 	// 총쏠때 소리를 내고싶다.
 	UPROPERTY(EditAnywhere, Category = MyVar)
@@ -105,15 +117,37 @@ public:
 	
 	UPROPERTY(EditAnywhere, Category = MyVar)
 	TSubclassOf<UCameraShakeBase> FireCameraShake;
-	
-	UPROPERTY()
-	TObjectPtr<class UPlayerBaseComponent> MoveComp;
+
 
 	UPROPERTY()
-	TObjectPtr<class UPlayerBaseComponent> FireComp;
+	TObjectPtr<class UPlayerBaseComponent> MoveComp; 
 	
+	UPROPERTY()
+	TObjectPtr<class UPlayerBaseComponent> FireComp; 
 	
-	FInputComponentDelegate InputComponentDelegate;	
-	
+	FInputComponentDelegate InputComponentDelegate;
 
+	void DoDamage(int32 damage);
+	
+	int32 CurHP;
+	int32 MaxHP = 3;
+	
+	
+	
+	
+	
+	// FDTestDelegate dtd;
+	// FDMDelegate dmd;
+	// void ttt(int32 v){}
+	//
+	// void Test()
+	// {
+	// 	dmd.AddDynamic(this, &ATPSPlayer::ttt);
+	// 	dmd.Broadcast(0);
+	// 	
+	// 	dtd.BindDynamic(this, &ATPSPlayer::ttt);
+	// 	dtd.Execute(23);
+	// }
+
+	
 };

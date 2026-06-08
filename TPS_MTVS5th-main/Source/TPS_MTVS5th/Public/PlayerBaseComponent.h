@@ -15,12 +15,15 @@ class TPS_MTVS5TH_API UPlayerBaseComponent : public UActorComponent
 public:
 	// Sets default values for this component's properties
 	UPlayerBaseComponent();
-	//virtual void InitializeComponent() override;
-	
+
 	virtual void InitializeComponent() override;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	UPROPERTY()
+	TObjectPtr<class ATPSPlayer> Me;
 
 public:
 	// Called every frame
@@ -28,10 +31,7 @@ public:
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 	
 	
-	virtual void SetupPlayerInputComp(class UEnhancedInputComponent* input);
+	virtual void SetPlayerInputComp(class UEnhancedInputComponent* input);
+	
 
-	
-	
-	UPROPERTY()
-	TObjectPtr<class ATPSPlayer> Me;
 };

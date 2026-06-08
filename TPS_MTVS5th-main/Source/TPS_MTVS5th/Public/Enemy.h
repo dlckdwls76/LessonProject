@@ -39,5 +39,4 @@ public:
 	TObjectPtr<class UNavigationInvokerComponent> NavInvokerComp;
 	
 	
-	
 };

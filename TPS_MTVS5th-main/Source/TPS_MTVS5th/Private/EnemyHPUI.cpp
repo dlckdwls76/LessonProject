@@ -2,13 +2,10 @@
 
 
 #include "EnemyHPUI.h"
-#include "Components/ProgressBar.h"
 
+#include "Components/ProgressBar.h"
 
 void UEnemyHPUI::UpdateHPBar(float cur, float max)
 {
-	if (HPBar)
-	{
-		HPBar->SetPercent(cur / max);
-	}
+	HPBar->SetPercent(cur / max);
 }
