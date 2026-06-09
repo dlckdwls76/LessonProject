@@ -7,6 +7,7 @@
 #include "Enemy.h"
 #include "EnhancedInputComponent.h"
 #include "MainUI.h"
+#include "ObjectPoolSubsystem.h"
 #include "TPSPlayer.h"
 #include "TPSPlayerAnim.h"
 #include "TPSPlayerController.h"
@@ -104,7 +105,6 @@ void UPlayerFireComponent::OnMyChooseGun(const struct FInputActionValue& value)
 	ZoomTarget = 90.f;
 	
 	Me->PlayerCtrl->MainUI->SetChooseGun(true);
-
 }
 
 void UPlayerFireComponent::OnMyChooseSniper(const struct FInputActionValue& value)
@@ -142,7 +142,9 @@ void UPlayerFireComponent::OnMyZoomOut(const struct FInputActionValue& value)
 void UPlayerFireComponent::MakeBullet()
 {
 	FTransform t = Me->GunComp->GetSocketTransform(TEXT("FirePoint"));
-	GetWorld()->SpawnActor<ABullet>(Me->BulletFactory, t);
+	auto* pool = GetWorld()->GetSubsystem<UObjectPoolSubsystem>();
+	pool->SpawnFromPool(Me->BulletFactory, t);
+	//GetWorld()->SpawnActor<ABullet>(Me->BulletFactory, t);
 }
 
 void UPlayerFireComponent::SharpShoot()

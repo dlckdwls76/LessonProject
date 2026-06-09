@@ -125,12 +125,15 @@ public:
 	UPROPERTY()
 	TObjectPtr<class UPlayerBaseComponent> FireComp; 
 	
-	FInputComponentDelegate InputComponentDelegate;
-
+	FInputComponentDelegate InputComponetDeletage;
+	
 	void DoDamage(int32 damage);
 	
 	int32 CurHP;
 	int32 MaxHP = 3;
+	
+	
+	
 	
 	
 	

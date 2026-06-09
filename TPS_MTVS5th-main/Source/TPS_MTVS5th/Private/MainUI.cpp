@@ -16,8 +16,6 @@ void UMainUI::SetGameOverActive(bool bActive)
 
 void UMainUI::SetChooseGun(bool bGun)
 {
-	
-	Cast<UCanvasPanelSlot>(ImageGun->Slot)->ZOrder = bGun ? 2 : 0;
-		Cast<UCanvasPanelSlot>(ImageSniper->Slot)->ZOrder = bGun ? 0 : 2;
-	
+	Cast<UCanvasPanelSlot>(ImageGun->Slot)->SetZOrder(bGun ? 2 : 0); 
+	Cast<UCanvasPanelSlot>(ImageSniper->Slot)->SetZOrder(bGun ? 0 : 2);
 }

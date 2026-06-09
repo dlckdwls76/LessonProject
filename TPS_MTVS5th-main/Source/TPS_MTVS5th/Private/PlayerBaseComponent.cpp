@@ -23,7 +23,7 @@ void UPlayerBaseComponent::InitializeComponent()
 
 	Me = Cast<ATPSPlayer>(GetOwner());
 	
-	Me->InputComponentDelegate.AddUObject(this, &UPlayerBaseComponent::SetPlayerInputComp);
+	Me->InputComponetDeletage.AddUObject(this, &UPlayerBaseComponent::SetPlayerInputComp);
 
 }
 
@@ -51,3 +51,4 @@ void UPlayerBaseComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 void UPlayerBaseComponent::SetPlayerInputComp(class UEnhancedInputComponent* input)
 {
 }
+

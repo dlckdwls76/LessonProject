@@ -3,6 +3,7 @@
 
 #include "Bullet.h"
 
+#include "ObjectPoolSubsystem.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
@@ -47,7 +48,9 @@ void ABullet::BeginPlay()
 		
 	GetWorldTimerManager().SetTimer(handle, [&]()
 	{
-		this->Destroy();
+		auto* pool = GetWorld()->GetSubsystem<UObjectPoolSubsystem>();
+		pool->ReturnToPool(this);
+		
 	}, SelfDestroyDelay, false);
 }
 
